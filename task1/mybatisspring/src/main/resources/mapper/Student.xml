@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--表示命名空间-->
+<mapper namespace="com.yl.mapper.StudentMapper">
+    <resultMap id="studentMap" type="com.yl.pojo.Student">
+        <result column="id" property="id"/>
+        <result property="joinTime" column="join_time"/>
+        <result property="knowFrom" column="know_from"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="Student">
+insert into student (id,name,number,qq,subject,join_time,school,wish,instructor,know_from,create_at,update_at)values
+ (#{id},#{name},#{number},#{qq},#{subject},#{joinTime},#{school},#{wish},#{instructor},#{knowFrom},#{createAt},#{updateAt})
+</insert>
+    <delete id="delete" parameterType="Student">
+delete from student where id=#{id}
+</delete>
+    <update id="update" parameterType="Student">
+update student set wish=#{wish} where id=#{id}
+</update>
+    <select id="getByNumber" parameterType="int" resultMap="studentMap">
+select * from student where number=#{number}
+</select>
+    <select id="getByName" parameterType="String" resultMap="studentMap">
+select * from student where name=#{name}
+ </select>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into student
+        (id,name,number,qq,subject,join_time,school,wish,instructor,know_from,create_at,update_at)values
+        <foreach collection="list" item="student" index="index" separator=",">
+            (#{student.id},#{student.name},#{student.number},#{student.qq},#{student.subject},#{student.joinTime},#{student.school},#{student.wish},#{student.instructor},#{student.knowFrom},#{student.createAt},#{student.updateAt})
+        </foreach>
+    </insert>
+</mapper>
