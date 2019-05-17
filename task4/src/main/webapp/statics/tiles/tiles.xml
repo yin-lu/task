@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+    <!-- tiles基础模板 -->
+    <definition name="baseTemplate" template="/WEB-INF/view/core/template.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="header" value="/WEB-INF/view/core/header.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/view/core/footer.jsp" />
+    </definition>
+
+    <definition name="homeTiles" extends="baseTemplate">
+        <put-attribute name="title" value="修真院首页" />
+        <put-attribute name="body" value="/WEB-INF/view/core/home.jsp" />
+    </definition>
+
+    <definition name="jobTiles" extends="baseTemplate">
+        <put-attribute name="title" value="职业" />
+        <put-attribute name="body" value="/WEB-INF/view/core/job.jsp" />
+    </definition>
+
+    <definition name="recommendTiles" extends="baseTemplate">
+        <put-attribute name="title" value="推荐" />
+        <put-attribute name="body" value="/WEB-INF/view/core/recommend.jsp" />
+    </definition>
+
+    <definition name="listTiles" extends="baseTemplate">
+        <put-attribute name="title" value="学员列表" />
+        <put-attribute name="body" value="/WEB-INF/view/core/listStudent.jsp" />
+    </definition>
+
+    <definition name="editTiles" extends="baseTemplate">
+        <put-attribute name="title" value="学员编辑" />
+        <put-attribute name="body" value="/WEB-INF/view/core/editStudent.jsp" />
+    </definition>
+
+    <definition name="addTiles" extends="baseTemplate">
+        <put-attribute name="title" value="增加学员" />
+        <put-attribute name="body" value="/WEB-INF/view/core/addStudent.jsp" />
+    </definition>
+
+    <definition name="selectTiles" extends="baseTemplate">
+        <put-attribute name="title" value="查询学员" />
+        <put-attribute name="body" value="/WEB-INF/view/core/selectStudent.jsp" />
+    </definition>
+</tiles-definitions>
