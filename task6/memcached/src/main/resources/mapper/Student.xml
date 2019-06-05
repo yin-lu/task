@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--表示命名空间-->
+<mapper namespace="com.yl.mapper.StudentMapper">
+    <resultMap id="studentMap" type="com.yl.entity.Student">
+        <result column="id" property="id"/>
+        <result property="joinTime" column="join_time"/>
+        <result property="knowFrom" column="know_from"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="Student">
+insert into student (name,qq,subject,join_time,school,wish,instructor,know_from,position,intro,image,salary,graduation,create_at,update_at)values
+ (#{name},#{qq},#{subject},#{joinTime},#{school},#{wish},#{instructor},#{knowFrom},#{position},#{intro},#{image},#{salary},#{graduation},#{createAt},#{updateAt})
+</insert>
+    <delete id="delete" parameterType="Student">
+delete from student where id=#{id}
+</delete>
+    <update id="update" parameterType="Student">
+update student set name=#{name},qq=#{qq},subject=#{subject},join_time=#{joinTime},school=#{school},wish=#{wish},instructor=#{instructor},know_from=#{knowFrom},position=#{position},intro=#{intro},image=#{image},salary=#{salary},graduation=#{graduation},create_at=#{createAt},update_at=#{updateAt} where id=#{id}
+</update>
+    <select id="getById" parameterType="int" resultMap="studentMap">
+select * from student where id=#{id}
+</select>
+    <select id="getByName" parameterType="String" resultMap="studentMap">
+select * from student where name like CONCAT(CONCAT('%',#{name},'%'))
+ </select>
+
+
+    <select id="listStudent" resultMap="studentMap">
+       select * from student
+</select>
+    <!--分页查询-->
+    <select id="list" resultMap="studentMap">
+        select * from student
+        <if test="start!=null and count!=null">
+            limit #{start},#{count}
+        </if>
+    </select>
+    <!--查询数据条数-->
+    <select id="total" resultType="int">
+          select count(*) from student
+</select>
+    <select id="graTotal" resultType="int">
+          select count(*) from student where graduation !=0
+</select>
+
+    <select id="salaryList"  resultMap="studentMap">
+        select * from student order by salary desc
+    </select>
+
+</mapper>
