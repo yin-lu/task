@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--基于注解实现aop-->
+    <context:component-scan base-package="com.yl.aop"/>
+    <!--开启aop-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <!-- 扫描service包下所有使用注解的类型 -->
+    <context:annotation-config/>
+    <!--<context:component-scan base-package="com.yl.service.impl"/>-->
+    <!-- 扫描包基础目录 -->
+    <context:component-scan base-package="com.yl"></context:component-scan>
+    <!--RMI配置开始-->
+    <bean id="rmiClientSetting" abstract="true">
+        <!-- 是否启动时加载stub -->
+        <property name="refreshEndpointsOnStartup" value="false" />
+        <!-- 调用异常时，将重新加载stub -->
+        <property name="refreshEndpointsOnConnectFailure" value="true" />
+        <!-- 调用失败时是否切换到其他服务端 -->
+        <property name="switchEndpointOnFailure" value="true" />
+        <!-- 追踪拦截器启用 -->
+        <property name="registerTraceInterceptor" value="true" />
+        <!-- 缓存stub 继承AbstractRmiShortFormProxyFactoryBean才有-->
+        <property name="cacheEndpoints" value="true" />
+    </bean>
+
+    <bean id="job" class="org.softamis.cluster4spring.rmi.RmiUrlListProxyFactoryBean" parent="rmiClientSetting">
+    <!-- 远程服务对象接口类 -->
+    <property name="serviceInterface" value="com.yl.service.JobService"/>
+    <!-- 远程对象地址list ，如果第一个无法使用，会抛异常，然后使用第二个去调用远程对象方法返回结果-->
+    <property name="serviceURLs">
+        <list>
+            <value>rmi://localhost:1199/job</value>
+            <value>rmi://localhost:1200/job</value>
+        </list>
+    </property>
+    <!-- 调用时选择那个url的策略 -->
+    <property name="endpointSelectionPolicy">
+        <bean class="org.softamis.cluster4spring.support.invocation.ShuffleEndpointSelectionPolicy"/>
+    </property>
+</bean>
+
+    <bean id="student" class="org.softamis.cluster4spring.rmi.RmiUrlListProxyFactoryBean" parent="rmiClientSetting">
+        <!-- 远程服务对象接口类 -->
+        <property name="serviceInterface" value="com.yl.service.StudentService"/>
+        <!-- 远程对象地址list ，如果第一个无法使用，会抛异常，然后使用第二个去调用远程对象方法返回结果-->
+        <property name="serviceURLs">
+            <list>
+                <value>rmi://localhost:1199/student</value>
+                <value>rmi://localhost:1200/student</value>
+            </list>
+        </property>
+        <!-- 调用时选择那个url的策略 -->
+        <property name="endpointSelectionPolicy">
+            <bean class="org.softamis.cluster4spring.support.invocation.ShuffleEndpointSelectionPolicy"/>
+        </property>
+    </bean>
+
+    <bean id="user" class="org.softamis.cluster4spring.rmi.RmiUrlListProxyFactoryBean" parent="rmiClientSetting">
+        <!-- 远程服务对象接口类 -->
+        <property name="serviceInterface" value="com.yl.service.UserService"/>
+        <!-- 远程对象地址list ，如果第一个无法使用，会抛异常，然后使用第二个去调用远程对象方法返回结果-->
+        <property name="serviceURLs">
+            <list>
+                <value>rmi://localhost:1199/user</value>
+                <value>rmi://localhost:1200/user</value>
+            </list>
+        </property>
+        <!-- 调用时选择那个url的策略 -->
+        <property name="endpointSelectionPolicy">
+            <bean class="org.softamis.cluster4spring.support.invocation.ShuffleEndpointSelectionPolicy"/>
+        </property>
+    </bean>
+
+
+    <!--<bean id="job" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">-->
+        <!--<property name="serviceUrl" value="rmi://localhost:1199/job"></property>-->
+        <!--<property name="serviceInterface" value="com.yl.service.JobService"></property>-->
+    <!--</bean>-->
+
+    <!--<bean id="student" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">-->
+        <!--<property name="serviceUrl" value="rmi://localhost:1199/student"></property>-->
+        <!--<property name="serviceInterface" value="com.yl.service.StudentService"></property>-->
+    <!--</bean>-->
+
+    <!--<bean id="user" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">-->
+        <!--<property name="serviceUrl" value="rmi://localhost:1199/user"></property>-->
+        <!--<property name="serviceInterface" value="com.yl.service.UserService"></property>-->
+    <!--</bean>-->
+    <!--客户端1 结束-->
+    <!--客户端2 开始-->
+    <!--<bean id="job1" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">-->
+        <!--<property name="serviceUrl" value="rmi://localhost:1200/job"></property>-->
+        <!--<property name="serviceInterface" value="com.yl.service.JobService"></property>-->
+    <!--</bean>-->
+
+    <!--<bean id="student1" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">-->
+        <!--<property name="serviceUrl" value="rmi://localhost:1200/student"></property>-->
+        <!--<property name="serviceInterface" value="com.yl.service.StudentService"></property>-->
+    <!--</bean>-->
+
+    <!--<bean id="user1" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">-->
+        <!--<property name="serviceUrl" value="rmi://localhost:1200/user"></property>-->
+        <!--<property name="serviceInterface" value="com.yl.service.UserService"></property>-->
+    <!--</bean>-->
+    <!--客户端2 结束-->
+    <!-- 配置RMI结束 -->
+
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.cj.jdbc.Driver"></property>
+        <property name="jdbcUrl"
+                  value="jdbc:mysql://127.0.0.1:3306/task7?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC"></property>
+        <property name="user" value="root"></property>
+        <property name="password" value="123456"></property>
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 别名 -->
+        <property name="typeAliasesPackage" value="com.yl.entity"/>
+        <!-- 数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- sql映射文件路径 -->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+    <!--自动扫描对象关系映射 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定要自动扫描接口的基础包，实现接口 -->
+        <property name="basePackage" value="com.yl.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+
+
+    <!--引入Redis配置文件-->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:redis.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- jedis 连接池配置 -->
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWait}"/>
+        <property name="maxTotal" value="${redis.maxActive}" />
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+    </bean>
+
+    <!-- 创建名为 springSessionRepositoryFilter 的Spring Bean，继承自Filter。
+        springSessionRepositoryFilter替换容器默认的HttpSession支持为Spring Session，
+        将Session实例存放在Redis中 -->
+    <bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
+    <!-- redis连接工厂 -->
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="poolConfig"/>
+        <property name="port" value="${redis.port}"/>
+        <property name="hostName" value="${redis.host}"/>
+        <property name="password" value="${redis.password}"/>
+        <property name="timeout" value="${redis.timeout}"></property>
+    </bean>
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+    </bean>
+    <bean id="redisUtil" class="com.yl.utils.RedisUtil">
+        <property name="redisTemplate" ref="redisTemplate"/>
+    </bean>
+
+    <!--容联短信验证-->
+    <bean id="smsSDK" class="com.yl.utils.SMS">
+        <constructor-arg name="serverIp" value="app.cloopen.com"></constructor-arg>
+        <constructor-arg name="serverPort" value=""></constructor-arg>
+        <constructor-arg name="accountSid" value=""></constructor-arg>
+        <constructor-arg name="accountToken" value=""></constructor-arg>
+        <constructor-arg name="appId" value=""></constructor-arg>
+    </bean>
+
+     <!--COS图片存储-->
+    <bean id="cosClientUtil" class="com.yl.utils.CosClientUtil">
+        <constructor-arg name="secretId" value=""></constructor-arg>
+        <constructor-arg name="secretKey" value=""></constructor-arg>
+        <constructor-arg name="address" value=""></constructor-arg>
+        <constructor-arg name="bucketName" value=""></constructor-arg>
+    </bean>
+
+    <!--OSS图片存储-->
+    <bean id="ossClientUtil" class="com.yl.utils.OssClientUtil">
+        <constructor-arg name="endpoint" value=""></constructor-arg>
+        <constructor-arg name="accessKeyId" value=""></constructor-arg>
+        <constructor-arg name="accessKeySecret" value=""></constructor-arg>
+        <constructor-arg name="bucketName" value=""></constructor-arg>
+    </bean>
+
+    <!--sendCloud邮箱验证-->
+    <bean id="emailSending" class="com.yl.utils.SendEmail">
+        <constructor-arg name="url" value= ""></constructor-arg>
+        <constructor-arg name="apiUser" value=""></constructor-arg>
+        <constructor-arg name="apiKey" value=""></constructor-arg>
+        <constructor-arg name="from" value=""></constructor-arg>
+    </bean>
+</beans>

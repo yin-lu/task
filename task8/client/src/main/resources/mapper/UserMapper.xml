@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--表示命名空间-->
+<mapper namespace="com.yl.mapper.UserMapper">
+    <resultMap id="userMap" type="com.yl.entity.User">
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+        insert into user(name,pwd,phone,email,image,create_at,update_at)values (#{name},#{pwd},#{phone},#{email},#{image},#{createAt},#{updateAt})
+    </insert>
+
+    <delete id="deleteUser" parameterType="User">
+        delete from user where id=#{id}
+    </delete>
+
+    <update id="updateUser" parameterType="User">
+        update user set name=#{name},pwd=#{pwd},phone=#{phone},email=#{email},image=#{image},create_at=#{createAt},update_at=#{updateAt} where id=#{id}
+    </update>
+
+    <update id="updateSelective" parameterType="User">
+        update user set
+        <if test="name !=null">
+            name=#{name},
+        </if>
+        <if test="pwd !=null">
+            pwd=#{pwd},
+        </if>
+        <if test="phone !=null">
+            phone=#{phone},
+        </if>
+        <if test="email !=null">
+            email=#{email},
+        </if>
+        <if test="image !=null">
+            image=#{image},
+        </if>
+        <if test="createAt !=null">
+            create_at=#{createAt},
+        </if>
+        <if test="updateAt !=null">
+            update_at=#{updateAt}
+        </if>
+        where id=#{id}
+    </update>
+
+    <select id="getById" parameterType="Long" resultMap="userMap">
+        select * from user where id=#{id}
+    </select>
+
+    <select id="getByName" parameterType="String" resultMap="userMap">
+        select * from user where name=#{name}
+    </select>
+
+    <select id="getByPhone" parameterType="String" resultMap="userMap">
+        select * from user where phone=#{phone}
+    </select>
+
+    <select id="getByEmail" parameterType="String" resultMap="userMap">
+        select * from user where email=#{email}
+    </select>
+
+    <!--<select id="login" resultMap="userMap">-->
+       <!--select * from user where name = #{name} and pwd = #{pwd}-->
+    <!--</select>-->
+
+    <!--<select id="listUser" resultMap="userMap">-->
+        <!--select * from user-->
+    <!--</select>-->
+</mapper>
