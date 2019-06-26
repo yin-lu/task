@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--xmlns="http://docs.oasis-open.org/opencsa/sca-assembly/sca-implementation-java-1.1-csd03.xsd"-->
+<composite
+        xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+        xmlns:tuscany="http://tuscany.apache.org/xmlns/sca/1.1"
+        targetNamespace="http://com.yl"
+        name="serviceComposite" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912">
+    <!-- 服务名 引入服务-->
+    <component name="serviceComposite">
+        <implementation.spring location="springMybatis.xml"/>
+        <!--name属性为Spring配置文件中的<sca:service>name-->
+        <service name="studentService">
+            <interface.java interface="com.yl.service.StudentService"/>
+            <tuscany:binding.rmi uri="rmi://localhost:1200/studentService"/>
+        </service>
+
+        <service name="jobService">
+            <interface.java interface="com.yl.service.JobService"/>
+            <tuscany:binding.rmi uri="rmi://localhost:1200/jobService"/>
+        </service>
+
+        <service name="userService">
+            <interface.java interface="com.yl.service.UserService"/>
+            <tuscany:binding.rmi uri="rmi://localhost:1200/userService"/>
+        </service>
+    </component>
+
+</composite>
